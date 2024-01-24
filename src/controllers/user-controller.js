@@ -66,3 +66,71 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getById = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const foundUser = await prisma.user.findUnique({
+      where: {
+        id: +userId,
+      },
+    });
+    if (!foundUser) {
+      next(createError("User doesn't exist", 404));
+      return;
+    }
+    res.status(200).json({ user: foundUser });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.editUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const foundUser = await prisma.user.findUnique({
+      where: {
+        id: +userId,
+      },
+    });
+    if (!foundUser) {
+      next(createError("User doesn't exist", 404));
+      return;
+    }
+    Object.assign(foundUser, req.body);
+    const editedUser = await prisma.user.update({
+      data: foundUser,
+      where: {
+        id: +userId,
+      },
+    });
+    res
+      .status(200)
+      .json({ message: "User has been updated.", user: editedUser });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteById = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const foundUser = await prisma.user.findUnique({
+      where: {
+        id: +userId,
+      },
+    });
+    if (!foundUser) {
+      next(createError("User doesn't exist.", 404));
+      return;
+    }
+    await prisma.user.delete({
+      where: {
+        id: foundUser.id,
+      },
+    });
+    res.status(200).json({ message: "user has been deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
