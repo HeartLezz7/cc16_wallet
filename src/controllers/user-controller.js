@@ -88,6 +88,10 @@ exports.getById = async (req, res, next) => {
 exports.editUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
+    if (!req.user || req.user.id !== +userId) {
+      next(createError("You're unauthorized.", 401));
+      return;
+    }
     const foundUser = await prisma.user.findUnique({
       where: {
         id: +userId,
@@ -98,12 +102,15 @@ exports.editUser = async (req, res, next) => {
       return;
     }
     Object.assign(foundUser, req.body);
+    delete foundUser.id;
+    delete foundUser.password;
     const editedUser = await prisma.user.update({
       data: foundUser,
       where: {
         id: +userId,
       },
     });
+    delete editedUser.password;
     res
       .status(200)
       .json({ message: "User has been updated.", user: editedUser });
@@ -115,6 +122,10 @@ exports.editUser = async (req, res, next) => {
 exports.deleteById = async (req, res, next) => {
   try {
     const { userId } = req.params;
+    if (!req.user || req.user.id !== +userId) {
+      next(createError("You're unauthorized.", 401));
+      return;
+    }
     const foundUser = await prisma.user.findUnique({
       where: {
         id: +userId,
