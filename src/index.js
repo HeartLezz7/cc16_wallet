@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const app = express();
 const cors = require("cors");
+require("dotenv").config();
 
 const userRoute = require("./routes/user-route");
 const pocketRoute = require("./routes/pocket-route");
@@ -20,4 +21,5 @@ app.use("/transaction", transactionRoute);
 app.use(notFoundMw);
 app.use(errorMw);
 
-app.listen(8000, () => console.log("server is running on port", 8000));
+const port = process.env.PORT;
+app.listen(port, () => console.log("server is running on port", port));
