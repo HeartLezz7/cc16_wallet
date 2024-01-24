@@ -16,7 +16,7 @@ model User {
   email     String    @unique
   firstName String
   lastName  String
-  phone     String
+  phone     String    @unique
   Account   Account[]
 }
 

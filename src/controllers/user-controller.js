@@ -2,11 +2,20 @@ const prisma = require("../config/prisma");
 const createError = require("../utils/create-error");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const {
+  registerSchema,
+  loginSchema,
+} = require("../validationSchema/authenSchema");
 require("dotenv").config();
 
 exports.register = async (req, res, next) => {
   try {
-    const { email, firstName, lastName, phone, password } = req.body;
+    const { error, value } = registerSchema.validate(req.body);
+    if (error) {
+      next(error);
+      return;
+    }
+    const { email, firstName, lastName, phone, password } = value;
     const hashedPw = await bcrypt.hash(password, 12);
     const newUser = await prisma.user.create({
       data: {
@@ -26,7 +35,12 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { emailOrPhone, password } = req.body;
+    const { error, value } = loginSchema.validate(req.body);
+    if (error) {
+      next(error);
+      return;
+    }
+    const { emailOrPhone, password } = value;
     const foundUser = await prisma.user.findFirst({
       where: {
         OR: [{ email: emailOrPhone }, { phone: emailOrPhone }],
