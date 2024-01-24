@@ -6,6 +6,61 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @unique @default(autoincrement())
+  email     String    @unique
+  firstName String
+  lastName  String
+  phone     String
+  Account   Account[]
+}
+
+model Account {
+  id            Int           @unique @default(autoincrement())
+  user          User          @relation(fields: [userId], references: [id])
+  userId        Int           @map("user_id")
+  type          AccountType   @relation(fields: [accountTypeId], references: [id])
+  accountTypeId Int           @map("account_type_id")
+  accountName   String        @map("account_name")
+  amount        Int           @default(0)
+  status        Boolean       @default(true)
+  payers        Transaction[] @relation("payer")
+  payees        Transaction[] @relation("payee")
+}
+
+model AccountType {
+  id       Int       @unique @default(autoincrement())
+  category String
+  Account  Account[]
+
+  @@map("account_type")
+}
+
+model Category {
+  id          Int           @unique @default(autoincrement())
+  category    Type
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id         Int      @unique @default(autoincrement())
+  payer      Account  @relation(name: "payer", fields: [payerId], references: [id])
+  payerId    Int      @map("payer_id")
+  payee      Account  @relation(name: "payee", fields: [payeeId], references: [id])
+  payeeId    Int      @map("payee_id")
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int      @map("category_id")
+  amount     Int
+  payerName  String   @map("payer_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+}
+
+enum Type {
+  EXPENSES
+  INCOME
+  TRANSFER
 }
