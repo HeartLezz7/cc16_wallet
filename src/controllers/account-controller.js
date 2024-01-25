@@ -7,9 +7,6 @@ exports.getAll = async (req, res, next) => {
       where: {
         userId: +req.user.id,
       },
-      // include: {
-      //   a
-      // },
     });
     res.status(200).json(myAccounts);
   } catch (err) {
