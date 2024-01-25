@@ -14,10 +14,6 @@ exports.createAcc = async (req, res, next) => {
 
 exports.getAll = async (req, res, next) => {
   try {
-    // if (!req.user) {
-    //   next(createError("You're unauthorized.", 401));
-    //   return;
-    // }
     const myAccounts = await prisma.account.findMany({
       where: {
         userId: +req.user.id,

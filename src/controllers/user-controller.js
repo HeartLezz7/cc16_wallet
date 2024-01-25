@@ -125,6 +125,7 @@ exports.editUser = async (req, res, next) => {
   }
 };
 
+// Optional
 exports.deleteById = async (req, res, next) => {
   try {
     const { error, value } = userIdSchema.validate(req.params);

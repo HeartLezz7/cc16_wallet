@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id        Int       @unique @default(autoincrement())
-  password  String    @db.VarChar(20)
+  password  String
   email     String    @unique @db.VarChar(50)
   firstName String    @db.VarChar(30)
   lastName  String    @db.VarChar(30)
@@ -60,7 +60,8 @@ model Transaction {
   transactionType   TransactionType @relation(fields: [transactionTypeId], references: [id])
   transactionTypeId Int             @map("transaction_type_id")
   amount            Int
-  payerName         String          @map("payer_name") @db.VarChar(50)
+  payerName         String?         @map("payer_name") @db.VarChar(50)
+  transactionDate   DateTime?       @map("transaction_date") @db.Date
   description       String?         @db.VarChar(50)
   createdAt         DateTime        @default(now()) @map("created_at")
   deletedAt         DateTime?
