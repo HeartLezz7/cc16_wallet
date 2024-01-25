@@ -12,11 +12,11 @@ datasource db {
 
 model User {
   id        Int       @unique @default(autoincrement())
-  password  String
-  email     String    @unique
-  firstName String
-  lastName  String
-  phone     String    @unique
+  password  String    @db.VarChar(20)
+  email     String    @unique @db.VarChar(50)
+  firstName String    @db.VarChar(30)
+  lastName  String    @db.VarChar(30)
+  phone     String    @unique @db.VarChar(10)
   Account   Account[]
 }
 
@@ -26,41 +26,50 @@ model Account {
   userId        Int           @map("user_id")
   type          AccountType   @relation(fields: [accountTypeId], references: [id])
   accountTypeId Int           @map("account_type_id")
-  accountName   String        @map("account_name")
+  accountName   String        @unique @map("account_name") @db.VarChar(100)
   amount        Int           @default(0)
   status        Boolean       @default(true)
-  payers        Transaction[] @relation("payer")
-  payees        Transaction[] @relation("payee")
+  senders       Transaction[] @relation("sender")
+  receivers     Transaction[] @relation("receiver")
 }
 
 model AccountType {
-  id       Int       @unique @default(autoincrement())
-  category String
+  id       Int             @unique @default(autoincrement())
+  category AccountCategory
   Account  Account[]
 
   @@map("account_type")
 }
 
-model Category {
-  id          Int           @unique @default(autoincrement())
-  category    Type
+model TransactionType {
+  id          Int                 @unique @default(autoincrement())
+  category    TransactionCategory
   Transaction Transaction[]
+
+  @@map("transaction_type")
 }
 
 model Transaction {
-  id         Int      @unique @default(autoincrement())
-  payer      Account  @relation(name: "payer", fields: [payerId], references: [id])
-  payerId    Int      @map("payer_id")
-  payee      Account  @relation(name: "payee", fields: [payeeId], references: [id])
-  payeeId    Int      @map("payee_id")
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int      @map("category_id")
-  amount     Int
-  payerName  String   @map("payer_name")
-  createdAt  DateTime @default(now()) @map("created_at")
+  id                Int             @unique @default(autoincrement())
+  sender            Account         @relation(name: "sender", fields: [senderId], references: [id])
+  senderId          Int             @map("sender_id")
+  receiver          Account         @relation(name: "receiver", fields: [receiverId], references: [id])
+  receiverId        Int             @map("receiver_id")
+  transactionType   TransactionType @relation(fields: [transactionTypeId], references: [id])
+  transactionTypeId Int             @map("transaction_type_id")
+  amount            Int
+  payerName         String          @map("payer_name") @db.VarChar(50)
+  description       String?         @db.VarChar(50)
+  createdAt         DateTime        @default(now()) @map("created_at")
 }
 
-enum Type {
+enum AccountCategory {
+  SAVINGS
+  FIXED
+  CURRENT
+}
+
+enum TransactionCategory {
   EXPENSES
   INCOME
   TRANSFER
