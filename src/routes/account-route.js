@@ -3,8 +3,8 @@ const router = express.Router();
 const accountController = require("../controllers/account-controller");
 const authenticationMw = require("../middlewares/authentication-mw");
 
-router.get("/", accountController.getAll);
-router.post("/", accountController.createAccount);
+router.get("/", authenticationMw, accountController.getAll);
+router.post("/", authenticationMw, accountController.createAccount);
 router.patch("/delete/:accountId", accountController.deleteAccount);
 router.patch("/edit/:id", accountController.editAccount);
 
