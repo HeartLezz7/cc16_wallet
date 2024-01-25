@@ -6,6 +6,7 @@ exports.getAll = async (req, res, next) => {
     const myAccounts = await prisma.account.findMany({
       where: {
         userId: +req.user.id,
+        deletedAt: null,
       },
     });
     res.status(200).json(myAccounts);
@@ -32,7 +33,7 @@ exports.deleteAccount = async (req, res, next) => {
   try {
     const { accountId } = req.params;
     const checkId = await prisma.account.findUnique({
-      where: { id: accountId },
+      where: { id: +accountId },
     });
 
     if (!checkId) {
@@ -53,7 +54,7 @@ exports.editAccount = async (req, res, next) => {
     const data = req.body;
     const { accountId } = req.params;
     const checkId = await prisma.account.findUnique({
-      where: { id: accountId },
+      where: { id: +accountId },
     });
 
     if (!checkId) {
