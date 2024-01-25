@@ -21,3 +21,7 @@ exports.loginSchema = Joi.object({
   ]),
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
 });
+
+exports.userIdSchema = Joi.object({
+  userId: Joi.number().integer().positive().required(),
+});

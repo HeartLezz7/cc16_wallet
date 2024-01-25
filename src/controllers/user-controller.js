@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const {
   registerSchema,
   loginSchema,
+  userIdSchema,
 } = require("../validationSchema/authenSchema");
 require("dotenv").config();
 
@@ -87,14 +88,19 @@ exports.getById = async (req, res, next) => {
 
 exports.editUser = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    if (!req.user || req.user.id !== +userId) {
+    const { error, value } = userIdSchema.validate(req.params);
+    console.log(typeof value.userId);
+    if (error) {
+      next(error);
+      return;
+    }
+    if (req.user.id !== value.userId) {
       next(createError("You're unauthorized.", 401));
       return;
     }
     const foundUser = await prisma.user.findUnique({
       where: {
-        id: +userId,
+        id: value.userId,
       },
     });
     if (!foundUser) {
@@ -107,7 +113,7 @@ exports.editUser = async (req, res, next) => {
     const editedUser = await prisma.user.update({
       data: foundUser,
       where: {
-        id: +userId,
+        id: value.userId,
       },
     });
     delete editedUser.password;
@@ -121,14 +127,18 @@ exports.editUser = async (req, res, next) => {
 
 exports.deleteById = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    if (!req.user || req.user.id !== +userId) {
+    const { error, value } = userIdSchema.validate(req.params);
+    if (error) {
+      next(error);
+      return;
+    }
+    if (req.user.id !== value.userId) {
       next(createError("You're unauthorized.", 401));
       return;
     }
     const foundUser = await prisma.user.findUnique({
       where: {
-        id: +userId,
+        id: value.userId,
       },
     });
     if (!foundUser) {

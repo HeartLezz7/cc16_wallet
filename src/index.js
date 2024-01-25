@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const userRoute = require("./routes/user-route");
-const pocketRoute = require("./routes/pocket-route");
+const accountRoute = require("./routes/account-route");
 const transactionRoute = require("./routes/transaction-route");
 const errorMw = require("./middlewares/error-mw");
 const notFoundMw = require("./middlewares/not-found-mw");
@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 
 app.get("/", (req, res) => res.status(200).json({ message: "Hello Server" }));
 app.use("/user", userRoute);
-app.use("/pocket", pocketRoute);
+app.use("/account", accountRoute);
 app.use("/transaction", transactionRoute);
 
 app.use(notFoundMw);

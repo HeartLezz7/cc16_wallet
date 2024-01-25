@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
       },
     });
     if (!foundUser) {
-      next(createError("User doesn't exist", 404));
+      next(createError("You're unauthorized", 401));
       return;
     }
     delete foundUser.password;
