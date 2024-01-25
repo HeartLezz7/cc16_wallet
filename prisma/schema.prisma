@@ -17,6 +17,7 @@ model User {
   firstName String    @db.VarChar(30)
   lastName  String    @db.VarChar(30)
   phone     String    @unique @db.VarChar(10)
+  deletedAt DateTime?
   Account   Account[]
 }
 
@@ -29,6 +30,7 @@ model Account {
   accountName   String        @unique @map("account_name") @db.VarChar(100)
   amount        Int           @default(0)
   status        Boolean       @default(true)
+  deletedAt     DateTime?
   senders       Transaction[] @relation("sender")
   receivers     Transaction[] @relation("receiver")
 }
@@ -61,6 +63,7 @@ model Transaction {
   payerName         String          @map("payer_name") @db.VarChar(50)
   description       String?         @db.VarChar(50)
   createdAt         DateTime        @default(now()) @map("created_at")
+  deletedAt         DateTime?
 }
 
 enum AccountCategory {
