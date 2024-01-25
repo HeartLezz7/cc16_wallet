@@ -1,6 +1,6 @@
 const prisma = require("../config/prisma");
 
-exports.getAllTransactions = async (req, res, next) => {
+exports.getAllTransactionsById = async (req, res, next) => {
   try {
     const transactions = await prisma.transaction.findMany();
     res.status(200).json(transactions);
