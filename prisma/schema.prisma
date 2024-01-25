@@ -64,7 +64,6 @@ model Transaction {
   transactionDate   DateTime?       @map("transaction_date") @db.Date
   description       String?         @db.VarChar(50)
   createdAt         DateTime        @default(now()) @map("created_at")
-  deletedAt         DateTime?
 }
 
 enum AccountCategory {
