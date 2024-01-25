@@ -2,7 +2,10 @@ const prisma = require("../config/prisma");
 
 exports.getAllTransactionsById = async (req, res, next) => {
   try {
-    const transactions = await prisma.transaction.findMany();
+    const { accId } = req.params;
+    const transactions = await prisma.transaction.findMany({
+      where: { OR: [{ senderId: +accId }, { receiverId: +accId }] },
+    });
     res.status(200).json(transactions);
   } catch (err) {
     next(err);
