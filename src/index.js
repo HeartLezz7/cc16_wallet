@@ -9,7 +9,6 @@ const accountRoute = require("./routes/account-route");
 const transactionRoute = require("./routes/transaction-route");
 const errorMw = require("./middlewares/error-mw");
 const notFoundMw = require("./middlewares/not-found-mw");
-const authenticationMw = require("./middlewares/authentication-mw");
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +16,7 @@ app.use(morgan("dev"));
 
 app.get("/", (req, res) => res.status(200).json({ message: "Hello Server" }));
 app.use("/user", userRoute);
-app.use("/account", authenticationMw, accountRoute);
+app.use("/account", accountRoute);
 app.use("/transaction", transactionRoute);
 
 app.use(notFoundMw);
