@@ -66,7 +66,12 @@ exports.editAccount = async (req, res, next) => {
         id: +accountId,
       },
     });
-    res.status(200).json(`update account id: ${accountId} completed`);
+    res
+      .status(200)
+      .json({
+        message: `update account id: ${accountId} completed`,
+        editAccount,
+      });
   } catch (error) {
     next(error);
   }

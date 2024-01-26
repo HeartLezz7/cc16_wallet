@@ -5,7 +5,15 @@ const authenticationMw = require("../middlewares/authentication-mw");
 
 router.get("/", authenticationMw, accountController.getAll);
 router.post("/", authenticationMw, accountController.createAccount);
-router.patch("/delete/:accountId", accountController.deleteAccount);
-router.patch("/edit/:accountId", accountController.editAccount);
+router.patch(
+  "/delete/:accountId",
+  authenticationMw,
+  accountController.deleteAccount
+);
+router.patch(
+  "/edit/:accountId",
+  authenticationMw,
+  accountController.editAccount
+);
 
 module.exports = router;

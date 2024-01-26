@@ -14,8 +14,9 @@ exports.getAllTransactionsById = async (req, res, next) => {
 
 exports.createTransaction = async (req, res, next) => {
   try {
-    const {} = req.body;
-    const transaction = await prisma.transaction.create({ data: req.body });
+    const data = req.body;
+    const transaction = await prisma.transaction.create({ data: data });
+    res.status(201).json(transaction);
   } catch (err) {
     next(err);
   }
